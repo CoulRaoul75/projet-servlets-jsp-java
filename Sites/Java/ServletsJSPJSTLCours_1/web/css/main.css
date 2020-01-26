@@ -1,0 +1,37 @@
+*{margin: 0; padding: 0;}
+html{height: 100%;}
+body{height: 100%;}
+
+header{
+    background-image: url('https://cdn.radiofrance.fr/s3/cruiser-production/2019/04/e7bc5b54-491c-41d8-a735-4a0440068a9a/600x337_dutilleux_arbre_des_songes_musicopolis.jpg'); 
+    color: darkolivegreen;
+    height: 150px;
+    vertical-align: middle;
+    text-align: center;
+}
+nav{
+    font-size: 20px;
+}
+article{
+    background-color: white;
+    color: black;
+    height: 70%;
+    padding: 1%;
+    overflow: auto;
+}
+footer{
+    background-color: darkslategrey;
+    color: white;
+    height: 50px;
+    padding: 1%;
+    font-weight: bolder;
+}
+nav ul{list-style: none;}
+nav ul li {display: inline-block;}
+nav ul li a{color: white; text-decoration: none;}
+table{border-collapse:collapse;}
+caption, th, td{border:1px solid black;}
+td, th{padding: 5px;}
+#articleAccueil{text-align: center;}
+input{margin: 5px; padding: 3px;}
+.etiquette{display: inline-block; width: 200px;}
