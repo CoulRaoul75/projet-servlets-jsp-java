@@ -1,15 +1,13 @@
-
-
-
 package fr.pb.entities;
 
-
+import java.io.Serializable;
 
 /**
  *
  * @author vanessa
  */
-public class Utilisateurs {
+// Serializable permet de créer un objet (contenant et contenu) sous forme de chaine de caractères
+public class Utilisateurs implements Serializable {
     
     // déclaration des attributs
     private String pseudo;
