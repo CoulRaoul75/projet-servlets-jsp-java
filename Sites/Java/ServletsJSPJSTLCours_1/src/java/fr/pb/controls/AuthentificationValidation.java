@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSession;
 // annotation chemin url 
 @WebServlet(name = "AuthentificationValidation", urlPatterns = {"/AuthentificationValidation"})
 public class AuthentificationValidation extends HttpServlet {
-    
+
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -44,41 +44,45 @@ public class AuthentificationValidation extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         String lsMessage = "";
-        
+
         HttpSession session = request.getSession();
 
         /*
         Connexion "interne" locale
          */
         Connection lcnx = null;
-        
+
         // try/catch de la requête de connexion à la bd
         try {
             Class.forName("org.gjt.mm.mysql.Driver");
-            String lsDSN = "jdbc:mysql://mysql-coulraoul.alwaysdata.net:3306/coulraoul_cours";
+            String lsDSN = "jdbc:mysql://mysql-coulraoul.alwaysdata.net:3306/cours";
             lcnx = DriverManager.getConnection(lsDSN, "root", "root");
             lcnx.setAutoCommit(false);
+
+            // Méthode controleur >> selectOne
+            // Utilisation de la fonction "request.getParameter" pour obtenir les valeurs du formulaire Authentification.jsp
+            UtilisateursDAO dao = new UtilisateursDAO(lcnx);
+            Utilisateurs u = dao.selectOne(
+                    request.getParameter("pseudo"),
+                    request.getParameter("mdp"));
+
+            // vérification de l'authentification avec retour message OK || KO
+            if (u == null) {
+                lsMessage = "Authentification ratée";
+                session.setAttribute("pseudo", "");
+            } else {
+                lsMessage = "Vous êtes connecté(e)";
+                session.setAttribute("pseudo", request.getParameter("pseudo"));
+            }
+
+            lcnx.close();
+
         } catch (ClassNotFoundException | SQLException e) {
         }
-        
-        // Méthode controleur >> selectOne
-        // Utilisation de la fonction "request.getParameter" pour obtenir les valeurs du formulaire Authentification.jsp
-        Utilisateurs u = UtilisateursDAO.selectOne(lcnx, 
-                request.getParameter("pseudo"), 
-                request.getParameter("mdp"));
-        
-        
-        // vérification de l'authentification avec retour message OK || KO
-        if (u == null) {
-            lsMessage = "Authentification ratée";
-            session.setAttribute("pseudo", "");
-        } else {
-            lsMessage = "Vous êtes connecté(e)";
-            session.setAttribute("pseudo", request.getParameter("pseudo"));
-        }
-
+    
         // envoi du resultat de la connexion dans la page Authentification.jsp
         request.setAttribute("message", lsMessage);
+        
         ServletContext sc = getServletContext();
         RequestDispatcher rd = sc.getRequestDispatcher("/jsp/Authentification.jsp");
         rd.forward(request, response);
