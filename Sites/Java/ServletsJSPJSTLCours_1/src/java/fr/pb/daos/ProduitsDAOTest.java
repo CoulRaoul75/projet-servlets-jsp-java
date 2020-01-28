@@ -17,40 +17,61 @@ import java.util.List;
  */
 public class ProduitsDAOTest {
     
+    /**
+     * 
+     * @param args 
+     */
     public static void main(String[] args) {
-        
-        // Initialisation IMPLICITE de la variable Connection
-        Connection lcnx = null;
         
         try {
             // connexion à la bd avec un try / catch - si erreur = envoi de l'erreur pour correction
             Class.forName("org.gjt.mm.mysql.Driver");
-            lcnx = DriverManager.getConnection("jdbc:mysql://mysql-coulraoul.alwaysdata.net:3306/coulraoul_cours", "root", "root");
+            Connection lcnx = DriverManager.getConnection("jdbc:mysql://mysql-coulraoul.alwaysdata.net:3306/coulraoul_cours", "coulraoul", "LilouChat08+");
             
-            /*
-            SELECT ALL 
-            Resultat de l'affichage des valeurs => OK
-             */
-            System.out.println("***** SELECT ALL *****");
-            // appel de la methode selectAll
+            int liCount = ProduitsDAO.getCount(lcnx);
+            System.out.println("Nb de produits (Count) : " + liCount);
+            
+            System.out.println("SelectOne");
+            Produits prod = ProduitsDAO.selectOne(lcnx, 11);
+            System.out.println(prod);
+            
             List<Produits> list = ProduitsDAO.selectAll(lcnx);
-            // boucle pour affichage des valeurs de la table Produits avec concaténation
-            for (Produits produit : list) {
-                System.out.println("id produit : " + produit.getId_produit() +
-                        " | Désignation : " + produit.getDesignation() +
-                        " | Prix : " + produit.getPrix() + 
-                        " | Qté : " + produit.getQte_stockee() + 
-                        " | Photo : " + produit.getPhoto());
-            }
+            // String lsCriteres = "1,37";
+            String[] tCriteres = {"1", "37"};
+            // List<Produits> listeProduits = ProduitsDAO.selectFew(lcnx, lsCriteres);
+            // List<Produits> listeProduits = ProduitsDAO.selectFew(lcnx, tCriteres);
+            // Connexion.seDeconnecter();
             
-            /*
-            Mettre ICI autres méthodes CRUD si besoin
+            System.out.println("SelectAll");
+            for (int i = 0; i < list.size(); i++) {
+                Produits produits = list.get(i);
+
+                System.out.print("[" + produits.getId_produit() + "] ");
+                System.out.print(produits.getDesignation() + " : ");
+                System.out.print(produits.getPrix() + " -> ");
+                System.out.println(produits.getPhoto());
+            }
+             /*
+            Apres deconnexion
             */
+            // listeProduits = ProduitsDAO.selectFew(lcnx, tCriteres);
+            // for (int i = 0; i < listeProduits.size(); i++) {
+            //
+            // Produits produits = listeProduits.get(i);
+            //
+            // System.out.print("[" + produits.getIdProduit() + "] ");
+            // System.out.print(produits.getDesignation() + " : ");
+            // System.out.print(produits.getPrix() + " -> ");
+            // System.out.println(produits.getPhoto());
+            // }
+
+            
             
             // fermeture de la connexion une fois la requête effectué
             lcnx.close();
 
         } catch (ClassNotFoundException | SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
     
